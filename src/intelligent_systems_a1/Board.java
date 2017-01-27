@@ -15,104 +15,118 @@ public class Board extends ObjectPlus{
     private final static char HOLE_CHAR = ' ';
     private char config[][];
     private Hole hole;
+    private int heurValue;
     
+    //used for boards that are NOT the initial board
+    public Board(char config[][],int parentHeurValue){
+        this.config = config;
+        hole = findHole();
+        heurValue = parentHeurValue + 1;
+    }
+   
+    //used for starting board
     public Board(char config[][]){
         this.config = config;
         hole = findHole();
     }
     
-    public char[][] getCurrentConfiguration(){
-        return config;
+    @Override
+    void show() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private boolean canMoveLeft(){
-        return (hole.x > 0);
-        
+    @Override
+    void showPart(int index) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getHeurValue(){
+        return heurValue;
     }
     
-    private boolean canMoveRight(){
-        return (hole.x < config[0].length-1);
-    }
-    
-    private boolean canMoveUp(){
-        return (hole.y > 0);
-    }
-    
-    private boolean canMoveDown(){
-        return (hole.y < config.length-1);
+    public char[][] getConfig(){
+        return config;
     }
     
     //Move the hole left
-    public char[][] moveLeft(){
+    public Board moveLeft(){
         
         if (canMoveLeft()){
+            
+            //copy board
+            Board newBoard = new Board(config);
             char onHole,leftOf;
             
-            onHole = config[hole.y][hole.x];
-            leftOf = config[hole.y][hole.x-1];
+            onHole = newBoard.getConfig()[hole.y][hole.x];
+            leftOf = newBoard.getConfig()[hole.y][hole.x-1];
             
-            config[hole.y][hole.x] = leftOf;
-            config[hole.y][hole.x-1] = onHole;
+            newBoard.getConfig()[hole.y][hole.x] = leftOf;
+            newBoard.getConfig()[hole.y][hole.x-1] = onHole;
             
-            hole.moveLeft();
-            return config;
+            return newBoard;
         }
-        
+
         //return null if can't move left
         return null;
     }
     
-    public char[][] moveRight(){
+    public Board moveRight(){
         
         if (canMoveRight()){
+            
+            //copy the new board
+            Board newBoard = new Board(config);
             char onHole,rightOf;
             
-            onHole = config[hole.y][hole.x];
-            rightOf = config[hole.y][hole.x+1];
+            onHole = newBoard.getConfig()[hole.y][hole.x];
+            rightOf = newBoard.getConfig()[hole.y][hole.x+1];
             
-            config[hole.y][hole.x] = rightOf;
-            config[hole.y][hole.x+1] = onHole;
+            newBoard.getConfig()[hole.y][hole.x] = rightOf;
+            newBoard.getConfig()[hole.y][hole.x+1] = onHole;
             
-            hole.moveRight();
-            return config;
+            return newBoard;
         }
         
         //return null if can't move right
         return null;
     }
     
-    public char[][] moveUp(){
+    public Board moveUp(){
         
         if (canMoveUp()){
+            
+            //copy the current board
+            Board newBoard = new Board(config);
             char onHole,above;
             
-            onHole = config[hole.y][hole.x];
-            above = config[hole.y-1][hole.x];
+            onHole = newBoard.getConfig()[hole.y][hole.x];
+            above = newBoard.getConfig()[hole.y-1][hole.x];
             
-            config[hole.y][hole.x] = above;
-            config[hole.y-1][hole.x] = onHole;
+            newBoard.getConfig()[hole.y][hole.x] = above;
+            newBoard.getConfig()[hole.y-1][hole.x] = onHole;
             
-            hole.moveUp();
-            return config;
+            return newBoard;
         }
         
         //return null if can't move up
         return null;
     }
     
-    public char[][] moveDown(){
+    public Board moveDown(){
         
         if (canMoveDown()){
+            
+            //copy board
+            Board newBoard = new Board(config);
             char onHole,below;
             
-            onHole = config[hole.y][hole.x];
-            below = config[hole.y+1][hole.x];
+            onHole = newBoard.getConfig()[hole.y][hole.x];
+            below = newBoard.getConfig()[hole.y+1][hole.x];
             
-            config[hole.y][hole.x] = below;
-            config[hole.y+1][hole.x] = onHole;
+            newBoard.getConfig()[hole.y][hole.x] = below;
+            newBoard.getConfig()[hole.y+1][hole.x] = onHole;
             
-            hole.moveDown();
-            return config;
+            return newBoard;
         }
         
         //return null if can't move down
@@ -162,18 +176,24 @@ public class Board extends ObjectPlus{
         }
     }
     
+        private boolean canMoveLeft(){
+        return (hole.x > 0);
+        
+    }
+    
+    private boolean canMoveRight(){
+        return (hole.x < config[0].length-1);
+    }
+    
+    private boolean canMoveUp(){
+        return (hole.y > 0);
+    }
+    
+    private boolean canMoveDown(){
+        return (hole.y < config.length-1);
+    }
+    
     private boolean isHole(char c){
         return (c == HOLE_CHAR);
     }
-    
-    @Override
-    void show() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    void showPart(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }
